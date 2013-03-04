@@ -32,10 +32,14 @@ $(document).ready(function() {
         });
         updateStats();
     });
+    $('#resultlink').click(function(){
+        $('.options').load('stats.php');
+        $(this).fadeOut();
+    });
 });
 
 function updateStats() {
-    $.getJSON('stats.php', function(data) {
+    $.getJSON('stats.php?raw', function(data) {
         $('#chart').sparkline(data, {type:'bar', barColor:'#444444'});
     });
 };

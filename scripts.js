@@ -1,11 +1,16 @@
-$(document).ready(function() {
+function RefreshOptions() {
     $.getJSON('vote.php', function(data) {
-        options = ["foo","bar"]
         options = data;
         $('#opt-1').text(options[0]);
         $('#opt-2').text(options[1]);
         $('.options').fadeIn("slow");
         updateStats();
+    });
+}
+$(document).ready(function() {
+    RefreshOptions();
+    $('#skip').click(function() {
+        RefreshOptions();
     });
     $('.option').click(function(){
         $('.option').css("background-color","#c20");
@@ -34,7 +39,7 @@ $(document).ready(function() {
     });
     $('#resultlink').click(function(){
         $('.options').load('stats.php');
-        $(this).fadeOut();
+        $('#footer').fadeOut();
     });
 });
 

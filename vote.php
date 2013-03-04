@@ -1,35 +1,36 @@
 <?php
-    $constant = 0;
+    function elo($playerRank, $opponentRank, $result) {
+        $k = 40;
+        $winProbability = 1/(10^(($opponentRank-$playerRank)/400)+1);
+        $newRank = $playerRank+($k*($result-$winProbability));
+        return $newRank;
+    }
+
+    // filter out bad attempts
     if ((isset($_POST["winner"]) && isset($_POST["loser"])) == false){
         header("HTTP/1.1 400 Bad Request");
         die("Error 01: Incorrect or insufficient parameters.");
     }
-    $win["name"] = $_POST["winner"];
-    $loss["name"] = $_POST["loser"];
 
-    $counts = json_decode(file_get_contents("counts.json"));
-    $counts->$win["name"] = ($counts->$win["name"] + 1);
-    $counts->$loss["name"] = ($counts->$loss["name"] + 1);
-    file_put_contents("counts.json",json_encode($counts));
-    $scores = json_decode(file_get_contents("scores.json"));
+    $win["name"] = $_POST["winner"];  // locate names
+    $loss["name"] = $_POST["loser"]; //  of players
 
-    $win["old"] = $scores->$win["name"];
+    $win["old"] = $scores->$win["name"];    // extract current
+    $loss["old"] = $scores->$loss["name"]; //  scores from json
 
-    $loss["old"] = $scores->$loss["name"];
+    $win["new"]  = elo($win["old"],$loss["old"],1);  // compute new
+    $loss["new"] = elo($loss["old"],$win["old"],0); // scores magically
 
-    $win["new"]  = $win["old"] + 1; 
-    $loss["new"] = $loss["old"] - 1;
+    $win["diff"] = $win["new"] - $win["old"];      // work out difference
+    $loss["diff"] = $loss["new"] - $loss["old"];  // to present to end user
 
-    $win["diff"] = $win["new"] - $win["old"];
-    $loss["diff"] = $loss["new"] - $loss["old"];
-
-    $scores->$win["name"] = $win["new"];
-    $scores->$loss["name"] = $loss["new"];
+    $scores->$win["name"] = $win["new"];    // store new score
+    $scores->$loss["name"] = $loss["new"]; // in the json
     
-    file_put_contents("scores.json",json_encode($scores));
+    file_put_contents("scores.json",json_encode($scores)); // save json
 
+    // create json to parse back to end user
     $scores = (array)$scores;
-    
     $return = (object) array('next' => array(array_rand($scores), array_rand($scores)), 'accepted' => array('last' => $_POST["winner"], 'loser' => $_POST['loser']));
     echo json_encode($return);
 ?>

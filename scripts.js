@@ -1,4 +1,11 @@
 $(document).ready(function() {
+    $.getJSON('vote.php', function(data) {
+        options = ["foo","bar"]
+        options = data;
+        $('#opt-1').text(options[0]);
+        $('#opt-2').text(options[1]);
+        $('.options').fadeIn("slow");
+    });
     $('.option').click(function(){
         $('.option').css("background-color","#c20");
         $(this).css("background-color","green");

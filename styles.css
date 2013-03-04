@@ -22,3 +22,6 @@ body {
     border-color: #444444;
     background-color:#555555;
 }
+.options {
+    display:none;
+}

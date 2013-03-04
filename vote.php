@@ -11,8 +11,10 @@
 
     // filter out bad attempts
     if ((isset($_POST["winner"]) && isset($_POST["loser"])) == false){
-        header("HTTP/1.1 400 Bad Request");
-        die("Error 01: Incorrect or insufficient parameters.");
+        $scores = json_decode(file_get_contents("scores.json"));
+        $scores = (array)$scores;
+        echo json_encode(array_rand($scores,2));
+        die();
     }
 
     $win["name"] = $_POST["winner"];  // locate names

@@ -1,9 +1,12 @@
 <?php
     function elo($playerRank, $opponentRank, $result) {
-        $k = 40;
+        $playerRank = $playerRank;
+        $opponentRank = $opponentRank;
+        $k = 20;
         $winProbability = 1/(10^(($opponentRank-$playerRank)/400)+1);
-        $newRank = $playerRank+($k*($result-$winProbability));
-        return $newRank;
+        $rankChange = $k*($result-$winProbability);
+        $newRank = $rankChange + $playerRank;
+        return intval($newRank);
     }
 
     // filter out bad attempts
@@ -15,14 +18,13 @@
     $win["name"] = $_POST["winner"];  // locate names
     $loss["name"] = $_POST["loser"]; //  of players
 
+    $scores = json_decode(file_get_contents("scores.json")); // pull json
+
     $win["old"] = $scores->$win["name"];    // extract current
     $loss["old"] = $scores->$loss["name"]; //  scores from json
 
     $win["new"]  = elo($win["old"],$loss["old"],1);  // compute new
     $loss["new"] = elo($loss["old"],$win["old"],0); // scores magically
-
-    $win["diff"] = $win["new"] - $win["old"];      // work out difference
-    $loss["diff"] = $loss["new"] - $loss["old"];  // to present to end user
 
     $scores->$win["name"] = $win["new"];    // store new score
     $scores->$loss["name"] = $loss["new"]; // in the json

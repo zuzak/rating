@@ -12,36 +12,54 @@ $(document).ready(function() {
     $('#skip').click(function() {
         RefreshOptions();
     });
-    $('.option').click(function(){
-        $('.option').css("background-color","#c20");
-        $(this).css("background-color","green");
-        win = this;
-        $('.options').fadeTo('slow',0,function(){
-            $('.option').css("background-color","#444");
-            if ($(win).attr("id") == "opt-1"){
-                lose = $('#opt-2');
-            } else {
-                lose = $('#opt-1');
-            }
-            $.post("vote.php",
-                {winner: $(win).text(),
-                 loser: $(lose).text()
-                },
-                function(data){
-                    $('.options').fadeTo('slow',1);
-                    $('#opt-1').text(data.next[0]);
-                    $('#opt-2').text(data.next[1]);
-                    updateStats();
-                }, "json"
-            );
-        });
-        updateStats();
+    $('#opt-1').click(function(){
+        SubmitChoice(1);
+    });
+    $('#opt-2').click(function(){
+        SubmitChoice(2);
     });
     $('#resultlink').click(function(){
         $('.options').load('stats.php');
         $('#footer').fadeOut();
     });
+    $('body').keyup(function (event) {
+        if (event.keyCode == 37) {
+            // left arrow
+            SubmitChoice(1);
+        } else if (event.keyCode == 39) {
+            // right arrow
+            SubmitChoice(2);
+        }
+    });
 });
+function SubmitChoice(choice) {        
+    win = $("#opt-"+choice);
+    if (choice == 1) {
+        lose = $("#opt-2");
+    } else {
+        lose = $('#opt-1');
+    }
+
+    $(win).css("background-color","green");    
+    $(lose).css("background-color","#c20");
+    
+    $('.options').fadeTo('slow',0,function(){
+        $('.option').css("background-color","#444");
+        $.post("vote.php",
+            {winner: $(win).text(),
+             loser: $(lose).text()
+            },
+            function(data){
+                $('.options').fadeTo('slow',1);
+                $('#opt-1').text(data.next[0]);
+                $('#opt-2').text(data.next[1]);
+                updateStats();
+            }, "json"
+        );
+    });
+    updateStats();
+};
+    
 
 function updateStats() {
     $.getJSON('stats.php?raw', function(data) {

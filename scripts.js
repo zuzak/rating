@@ -43,14 +43,14 @@ function SubmitChoice(choice) {
     $(win).css("background-color","green");    
     $(lose).css("background-color","#c20");
     
-    $('.options').fadeTo('slow',0,function(){
+    $('.options').fadeTo('fast',0,function(){
         $('.option').css("background-color","#444");
         $.post("vote.php",
             {winner: $(win).text(),
              loser: $(lose).text()
             },
             function(data){
-                $('.options').fadeTo('slow',1);
+                $('.options').fadeTo('fast',1);
                 $('#opt-1').text(data.next[0]);
                 $('#opt-2').text(data.next[1]);
                 updateStats();

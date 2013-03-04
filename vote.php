@@ -1,4 +1,11 @@
 <?php
+    function pullTwo($array){
+        while($a != $b) {
+            $a = array_rand($array);
+            $b = array_rand($array);
+        }
+        return array($a,$b);
+    }
     function elo($playerRank, $opponentRank, $result) {
         $playerRank = $playerRank;
         $opponentRank = $opponentRank;
@@ -13,7 +20,7 @@
     if ((isset($_POST["winner"]) && isset($_POST["loser"])) == false){
         $scores = json_decode(file_get_contents("scores.json"));
         $scores = (array)$scores;
-        echo json_encode(array_rand($scores,2));
+        echo json_encode(pullTwo($scores));
         die();
     }
 
@@ -35,6 +42,6 @@
 
     // create json to parse back to end user
     $scores = (array)$scores;
-    $return = (object) array('next' => array(array_rand($scores), array_rand($scores)), 'accepted' => array('last' => $_POST["winner"], 'loser' => $_POST['loser']));
+    $return = (object) array('next' => pullTwo($scores), 'accepted' => array('last' => $_POST["winner"], 'loser' => $_POST['loser']));
     echo json_encode($return);
 ?>

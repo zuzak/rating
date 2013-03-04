@@ -1,6 +1,6 @@
 <?php
     function pullTwo($array){
-        while($a != $b) {
+        while($a == $b) {
             $a = array_rand($array);
             $b = array_rand($array);
         }

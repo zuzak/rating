@@ -7,8 +7,6 @@
         return array($a,$b);
     }
     function elo($playerRank, $opponentRank, $result) {
-        $playerRank = $playerRank;
-        $opponentRank = $opponentRank;
         $k = 20;
         $winProbability = 1/(10^(($opponentRank-$playerRank)/400)+1);
         $rankChange = $k*($result-$winProbability);

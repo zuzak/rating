@@ -32,6 +32,7 @@ $(document).ready(function() {
         }
     });
 });
+var count = 0;
 function SubmitChoice(choice) {        
     win = $("#opt-"+choice);
     if (choice == 1) {
@@ -53,6 +54,8 @@ function SubmitChoice(choice) {
                 $('.options').fadeTo('slow',1);
                 $('#opt-1').text(data.next[0]);
                 $('#opt-2').text(data.next[1]);
+                count++;
+                $('#count').text(count);
                 updateStats();
             }, "json"
         );

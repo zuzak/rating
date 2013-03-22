@@ -1,11 +1,4 @@
-<?php
-    function pullTwo($array){
-        while($a == $b) {
-            $a = array_rand($array);
-            $b = array_rand($array);
-        }
-        return array($a,$b);
-    }
+<pre><?php
     function elo($playerRank, $opponentRank, $result) {
         $k = 20;
         $winProbability = 1/(10^(($opponentRank-$playerRank)/400)+1);
@@ -13,33 +6,26 @@
         $newRank = $rankChange + $playerRank;
         return intval($newRank);
     }
-
-    // filter out bad attempts
-    if ((isset($_POST["winner"]) && isset($_POST["loser"])) == false){
-        $scores = json_decode(file_get_contents("scores.json"));
-        $scores = (array)$scores;
-        echo json_encode(pullTwo($scores));
+    
+    if ((isset($_POST["winner"]) && isset($_POST["loser"])) ==false) {
+        header("HTTP/1.1 400 Bad Request"); // lol fuck you go away
         die();
     }
 
-    $win["name"] = $_POST["winner"];  // locate names
-    $loss["name"] = $_POST["loser"]; //  of players
+    $win  = $_POST["winner"]; 
+    $loss = $_POST["loser"]; 
+    $scores = json_decode(file_get_contents("scores.json"));
+    $winner = $scores->$win;
+    $loser = $scores->$loss;
+    $winner->count++;   
+    $loser->count++;
+    $winscore = $winner->score;
+    $winner->score = elo($winscore, $loser->score, 1);
+    $loser->score = elo($loser->score, $winscore, 0);
 
-    $scores = json_decode(file_get_contents("scores.json")); // pull json
+    $scores->$win=$winner;
+    $scores->$loss=$loser;
 
-    $win["old"] = $scores->$win["name"];    // extract current
-    $loss["old"] = $scores->$loss["name"]; //  scores from json
-
-    $win["new"]  = elo($win["old"],$loss["old"],1);  // compute new
-    $loss["new"] = elo($loss["old"],$win["old"],0); // scores magically
-
-    $scores->$win["name"] = $win["new"];    // store new score
-    $scores->$loss["name"] = $loss["new"]; // in the json
-    
-    file_put_contents("scores.json",json_encode($scores)); // save json
-
-    // create json to parse back to end user
-    $scores = (array)$scores;
-    $return = (object) array('next' => pullTwo($scores), 'accepted' => array('last' => $_POST["winner"], 'loser' => $_POST['loser']));
-    echo json_encode($return);
+    echo json_encode($scores);  
+    file_put_contents("scores.json",json_encode($scores));
 ?>

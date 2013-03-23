@@ -52,8 +52,8 @@ function SubmitChoice(choice) {
             },
             function(data){
                 $('.options').fadeTo('slow',1);
-                $('#opt-1').text(data.next[0]);
-                $('#opt-2').text(data.next[1]);
+                $('#opt-1').text(data[0]);
+                $('#opt-2').text(data[1]);
                 count++;
                 $('#count').text(count);
                 updateStats();

@@ -3,7 +3,11 @@
     $stats = (array)$stats;
 
     if (isset($_GET["raw"])){
-        die(json_encode(array_values($stats)));
+        foreach ($stats as $name => $stat) {
+//            $raw[$name] = $stat -> score;
+            $raw[] = $stat -> score;
+        }
+        die(json_encode($raw));
     }
 
     arsort($stats);

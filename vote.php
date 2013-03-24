@@ -6,6 +6,10 @@
         $newRank = $rankChange + $playerRank;
         return intval($newRank);
     }
+    
+    function matchfind ($a, $b) {
+        return $b["count"] - $a["count"];
+    }
 
     $scores = json_decode(file_get_contents("scores.json"));
     if ((isset($_POST["winner"]) && isset($_POST["loser"])) == true) {
@@ -30,8 +34,14 @@
         file_put_contents("scores.json",json_encode($scores));
     }
 
+    $scores = json_decode(file_get_contents("scores.json"),true);
     // display new pair to match
+    uasort($scores, "matchfind");
+    $entries = array_keys($scores);
+    $entries = array_reverse($entries);
+    echo json_encode(array($entries[0], $entries[1]));
 
+    /*
     $last["c"] = INF; 
     foreach($scores as $name => $data) {
         if ($data->count <= $last["c"]) {
@@ -42,5 +52,5 @@
     }
     $score = array($last["n"], $penu["n"]);
     echo json_encode($score);
-   
+     */
 ?>

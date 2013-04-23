@@ -21,8 +21,8 @@
         $winner = $scores->$win; // pull out current scores
         $loser = $scores->$loss;
 
-        $winner->count++; // increment match count
-        $loser->count++;
+        $winner->count += rand(1,3); // increment match count
+        $loser->count += rand(1,3);
 
         // compute new scores
         $winscore = $winner->score;

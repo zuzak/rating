@@ -25,6 +25,12 @@ li {
     font-size:16px;
     padding:10px;
 }
+ul {
+    margin:auto;
+    width:200px;
+    padding-left:0;
+    list-style-type:none;
+}
 .container {
     float:left;
     width:50%;
@@ -48,4 +54,8 @@ li {
 }
 a {
     color:inherit;
+}
+span.desc {
+    font-size:80%;
+    display:block;
 }

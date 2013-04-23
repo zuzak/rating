@@ -11,9 +11,10 @@
     }
 
     arsort($stats);
-    echo "<ol>";
+    echo "<ul>";
     foreach(array_keys($stats) as $stat) {
-        echo "<li>$stat</li>";
+        echo "<li>$stat <span class=\"desc\">".$stats[$stat]->desc."</li>";
+
     }
-    echo "</ol>";
+    echo "</ul>";
 ?>

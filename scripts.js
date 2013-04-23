@@ -51,6 +51,7 @@ function SubmitChoice(choice) {
              loser: $(lose).text()
             },
             function(data){
+                console.log(data);
                 $('.options').fadeTo('slow',1);
                 $('#opt-1').text(data[0]);
                 $('#opt-2').text(data[1]);
